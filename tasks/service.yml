@@ -1,0 +1,21 @@
+---
+
+- name: ELASTICSEARCH_EXPORTER | Copy Daemon script
+  template:
+    src: elasticsearch_exporter.service.j2
+    dest: /etc/systemd/system/elasticsearch_exporter.service
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart elasticsearch_exporter
+  tags:
+    - elasticsearch_exporter_service
+
+- name: ELASTICSEARCH_EXPORTER | Configuring service
+  systemd:
+    name: elasticsearch_exporter
+    state: "{{ elasticsearch_exporter_service_state }}"
+    enabled: "{{ elasticsearch_exporter_service_enabled }}"
+    daemon_reload: yes
+  tags:
+    - elasticsearch_exporter_service

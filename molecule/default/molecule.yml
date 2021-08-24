@@ -1,0 +1,38 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  yamllint -f colored .
+  ansible-lint --force-color .
+platforms:
+  - name: elasticsearch_exporter
+    groups:
+      - elasticsearch_exporter_group
+    image: ${MOLECULE_DISTRO:-idealista/jdk:11.0.12-buster-openjdk-headless}
+    privileged: false
+    capabilities:
+      - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    command: '/lib/systemd/systemd'
+    stop_signal: 'RTMIN+3'
+    networks:
+      - name: prometheus-es-network
+        aliases:
+          - elasticsearch_exporter
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      elasticsearch_exporter_group:
+        java_open_jdk_home: ${JAVA_JDK_HOME:-/usr/lib/jvm/java-11-openjdk-amd64}
+  env:
+    ANSIBLE_FORCE_COLOR: 1
+    PY_COLORS: 1
+verifier:
+  name: ansible

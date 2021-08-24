@@ -1,0 +1,24 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=elasticsearch exporter
+Documentation={{ elasticsearch_exporter_documentation_link }}
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+PrivateTmp={{ elasticsearch_exporter_private_tmp }}
+User={{ elasticsearch_exporter_user }}
+Group={{ elasticsearch_exporter_group }}
+RuntimeDirectory=elasticsearch_exporter
+LimitNOFILE={{ elasticsearch_exporter_max_files }}
+
+ExecStart={{ elasticsearch_exporter_bin_path }}/{{ elasticsearch_exporter_exec_name }} {% for option in elasticsearch_exporter_options %}{% if option %}--{{ option }} {% endif %}{% endfor %}
+
+StandardOutput={{ elasticsearch_exporter_log_output }}
+StandardError={{ elasticsearch_exporter_log_output }}
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

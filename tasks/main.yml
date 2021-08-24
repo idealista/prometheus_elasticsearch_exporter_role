@@ -1,0 +1,11 @@
+---
+
+- name: ELASTICSEARCH_EXPORTER | Install
+  include: install.yml
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Service
+  include: service.yml
+  tags:
+    - elasticsearch_exporter_service

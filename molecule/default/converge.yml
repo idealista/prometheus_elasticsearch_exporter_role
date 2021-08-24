@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: elasticsearch_exporter_group
+  roles:
+    - role: prometheus_elasticsearch_exporter_role

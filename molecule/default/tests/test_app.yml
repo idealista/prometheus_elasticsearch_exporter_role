@@ -1,0 +1,39 @@
+---
+
+service:
+  elasticsearch_exporter:
+    enabled: true
+    running: true
+
+user:
+  prometheus:
+    exists: true
+    uid:
+      lt: 1000
+    groups:
+      - prometheus
+    shell: /usr/sbin/nologin
+group:
+  prometheus:
+    gid:
+      lt: 1000
+    exists: true
+
+http:
+  http://localhost:9114/metrics:
+    status: 200
+    method: GET
+    body:
+      - 'elasticsearch_clusterinfo_up{url="http://elasticsearch_exporter:9200"} 1'
+
+file:
+  /opt/elasticsearch_exporter:
+    owner: prometheus
+    group: prometheus
+    exists: true
+    filetype: directory
+  /opt/elasticsearch_exporter/bin:
+    owner: prometheus
+    group: prometheus
+    exists: true
+    filetype: directory

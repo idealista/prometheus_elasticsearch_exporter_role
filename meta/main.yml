@@ -1,0 +1,18 @@
+---
+
+galaxy_info:
+  author: idealista
+  company: Idealista S.A.U.
+  description: Prometheus Elasticsearch Exporter Role
+  min_ansible_version: 4.4.0
+  license: Apache 2.0
+  galaxy-tags:
+    - prometheus
+    - elasticsearch
+    - exporter
+    - elasticsearch-exporter
+    - prometheus-elasticsearch-exporter
+  platforms:
+    - name: Debian
+      versions:
+        - buster

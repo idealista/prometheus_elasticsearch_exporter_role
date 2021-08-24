@@ -1,0 +1,7 @@
+---
+
+- name: restart elasticsearch_exporter
+  systemd:
+    name: elasticsearch_exporter
+    state: restarted
+  when: elasticsearch_exporter_service_state != 'stopped'

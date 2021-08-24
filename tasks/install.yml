@@ -1,0 +1,89 @@
+---
+
+- name: ELASTICSEARCH_EXPORTER | Ensure elasticsearch_exporter group
+  group:
+    name: "{{ elasticsearch_exporter_group }}"
+    system: yes
+    state: present
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Ensure elasticsearch_exporter user
+  user:
+    name: "{{ elasticsearch_exporter_user }}"
+    group: "{{ elasticsearch_exporter_group }}"
+    system: yes
+    shell: "{{ elasticsearch_exporter_user_shell }}"
+    createhome: no
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Ensure skeleton paths
+  file:
+    dest: "{{ item }}"
+    owner: "{{ elasticsearch_exporter_user }}"
+    group: "{{ elasticsearch_exporter_group }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ elasticsearch_exporter_skeleton_paths }}"
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Ensure skeleton log paths
+  file:
+    dest: "{{ elasticsearch_exporter_log_path }}"
+    owner: "{{ elasticsearch_exporter_user }}"
+    group: "{{ elasticsearch_exporter_group }}"
+    state: directory
+    mode: 0755
+  when: elasticsearch_exporter_log_file is defined
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Check elasticsearch_exporter version
+  command: "{{ elasticsearch_exporter_exec_name }} --version"
+  register: elasticsearch_exporter_check
+  changed_when: false
+  ignore_errors: true
+  check_mode: no
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Download package
+  get_url:
+    url: "{{ elasticsearch_exporter_url }}"
+    dest: "{{ elasticsearch_exporter_package_path }}"
+  when: elasticsearch_exporter_force_reinstall or elasticsearch_exporter_check is failed or elasticsearch_exporter_version not in elasticsearch_exporter_check.stderr
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Extract downloaded package
+  unarchive:
+    src: "{{ elasticsearch_exporter_package_path }}"
+    dest: "{{ elasticsearch_exporter_download_path }}"
+    remote_src: True
+  when: elasticsearch_exporter_force_reinstall or elasticsearch_exporter_check is failed or elasticsearch_exporter_version  not in elasticsearch_exporter_check.stderr
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Copy binary
+  copy:
+    src: "{{ elasticsearch_exporter_src_bin }}"
+    dest: "{{ elasticsearch_exporter_bin_path }}/{{ elasticsearch_exporter_exec_name }}"
+    owner: "{{ elasticsearch_exporter_user }}"
+    group: "{{ elasticsearch_exporter_group }}"
+    remote_src: True
+    mode: 0755
+  when: elasticsearch_exporter_force_reinstall or elasticsearch_exporter_check is failed or elasticsearch_exporter_version not in elasticsearch_exporter_check.stderr
+  tags:
+    - elasticsearch_exporter_install
+
+- name: ELASTICSEARCH_EXPORTER | Link binary
+  file:
+    src: "{{ elasticsearch_exporter_bin_path }}/{{ elasticsearch_exporter_exec_name }}"
+    dest: "/usr/bin/{{ elasticsearch_exporter_exec_name }}"
+    state: link
+  when: elasticsearch_exporter_force_reinstall or elasticsearch_exporter_check is failed or elasticsearch_exporter_version not in elasticsearch_exporter_check.stderr
+  tags:
+    - elasticsearch_exporter_install
