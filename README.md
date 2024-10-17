@@ -8,9 +8,9 @@
 
 This ansible role installs [Prometheus Elasticsearch Exporter](https://github.com/prometheus-community/elasticsearch_exporter) in a Debian environment. It has been tested for the following Debian versions:
 
-* Buster
+* Bullseye
 
-This role has been generated using the [cookiecutter](https://github.com/cookiecutter/cookiecutter) tool, you can generate a similar role that fits your needs using the this [cookiecutter template](https://github.com/idealista/cookiecutter-ansible-role).
+This role has been generated using the [cookiecutter](https://github.com/cookiecutter/cookiecutter) tool, you can generate a similar role that fits your needs using the [cookiecutter template](https://github.com/idealista/cookiecutter-ansible-role).
 
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
@@ -28,9 +28,9 @@ These instructions will get you a copy of the role for your Ansible playbook. On
 
 ### Prerequisites
 
-Ansible 2.10.7 version installed.
+Ansible >= 4 version installed.
 
-Molecule 3.x.x version installed.
+Molecule >= 4 version installed.
 
 For testing purposes, [Molecule](https://molecule.readthedocs.io/) with [Docker](https://www.docker.com/) as driver and [Goss](https://github.com/aelsabbahy/goss) as verifier.
 
@@ -40,7 +40,7 @@ Create or add to your roles dependency file (e.g requirements.yml):
 
 ```
 - src: idealista.prometheus_elasticsearch_exporter_role
-  version: 1.0.0
+  version: 1.1.0
   name: prometheus_elasticsearch_exporter_role
 ```
 
@@ -82,9 +82,9 @@ $ pipenv run molecule test
 
 ## Built With
 
-![Ansible](https://img.shields.io/badge/ansible-2.10.7-green.svg)
-![Molecule](https://img.shields.io/badge/molecule-3.1.5-green.svg)
-![Goss](https://img.shields.io/badge/goss-0.3.16-green.svg)
+![Ansible](https://img.shields.io/badge/ansible-10.5.0-green.svg)
+![Molecule](https://img.shields.io/badge/molecule-24.9.0-green.svg)
+![Goss](https://img.shields.io/badge/goss-0.3.18-green.svg)
 
 ## Versioning
 
